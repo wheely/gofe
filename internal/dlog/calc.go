@@ -351,7 +351,10 @@ func (c *CalcBN256) BabyStepGiantStep(h, g *bn256.GT) (*big.Int, error) {
 	// create goroutines calculating positive and possibly negative
 	// result if c.neg is set to true
 	retChan := make(chan *big.Int)
+	defer close(retChan)
 	errChan := make(chan error)
+	defer close(errChan)
+
 	go c.runBabyStepGiantStepIterative(h, g, retChan, errChan)
 
 	// catch a value when the first routine finishes
